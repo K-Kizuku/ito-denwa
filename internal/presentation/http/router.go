@@ -11,7 +11,8 @@ import (
 )
 
 type Router struct {
-	hh handler.IHealthzHandler
+	hh  handler.IHealthzHandler
+	wsh handler.IWebSocketHandler
 }
 
 type IRouter interface {
@@ -20,9 +21,10 @@ type IRouter interface {
 
 var _ IRouter = (*Router)(nil)
 
-func NewRouter(hh handler.IHealthzHandler) *Router {
+func NewRouter(hh handler.IHealthzHandler, wsh handler.IWebSocketHandler) *Router {
 	return &Router{
-		hh: hh,
+		hh:  hh,
+		wsh: wsh,
 	}
 }
 
@@ -32,6 +34,14 @@ func (r *Router) Setup(e *gin.Engine, cfg *config.Config) *gin.Engine {
 	e.Use(gin.Logger())
 	e.Use(gin.Recovery())
 	api := e.Group("/api")
-	api.GET("/healthz", r.hh.Healthz)
+	{
+		api.GET("/healthz", r.hh.Healthz)
+
+		ws := api.Group("/ws")
+		{
+			ws.GET("/", r.wsh.WebSocket)
+			ws.GET("/debug", r.wsh.DebugWebSocket)
+		}
+	}
 	return e
 }

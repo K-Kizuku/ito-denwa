@@ -1,4 +1,4 @@
-package websocket
+package service
 
 import (
 	"context"
@@ -12,7 +12,7 @@ type IWebsocket interface {
 	Send(ctx context.Context, messageType int, data []byte) error
 	SendBinary(ctx context.Context, ch <-chan []byte, errCh chan<- error)
 	SendText(ctx context.Context, ch <-chan []byte, errCh chan<- error)
-	Read(ctx context.Context, ch chan<- []byte, errCh chan<- error)
+	Read(ctx context.Context, textCh chan<- string, binaryCh chan<- []byte, errCh chan<- error)
 	Close() error
 }
 
@@ -80,20 +80,28 @@ func (ws *Websocket) SendText(ctx context.Context, ch <-chan []byte, errCh chan<
 	}
 }
 
-func (ws *Websocket) Read(ctx context.Context, ch chan<- []byte, errCh chan<- error) {
+func (ws *Websocket) Read(ctx context.Context, textCh chan<- string, bynaryCh chan<- []byte, errCh chan<- error) {
 	i, data, err := ws.Conn.ReadMessage()
 	if err != nil {
 		errCh <- err
 		return
 	}
-	if i == gorilla.TextMessage || i == gorilla.BinaryMessage {
+	switch i {
+	case gorilla.TextMessage:
 		select {
-		case ch <- data:
+		case textCh <- string(data):
 		case <-ctx.Done():
 			return
 		}
-	} else {
+	case gorilla.BinaryMessage:
+		select {
+		case bynaryCh <- data:
+		case <-ctx.Done():
+			return
+		}
+	default:
 		errCh <- errors.New("unsupported message type")
+		return
 	}
 }
 

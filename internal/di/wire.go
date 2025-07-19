@@ -19,6 +19,7 @@ func InitRouter(e *gin.Engine, cfg *config.Config) *http.Router {
 		usecase.NewHealthzUsecase,
 		http.NewRouter,
 		handler.NewHealthzHandler,
+		handler.NewWebSocketHandler,
 	)
 	return &http.Router{}
 }
