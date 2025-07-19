@@ -9,7 +9,14 @@ services:
     develop:
       watch:
         - action: rebuild
-          path: ./
+          path: .
+          ignore:
+            - ".git"
+            - "docker-compose.yaml"
+            - "docker/backend.Dockerfile"
+            - "docker/mysql.Dockerfile"
+            - Makefile
+            - "README.md"
     depends_on:
       db:
         condition: service_healthy
