@@ -26,24 +26,29 @@ var File_string_phone_user_user_proto protoreflect.FileDescriptor
 
 const file_string_phone_user_user_proto_rawDesc = "" +
 	"\n" +
-	"\x1cstring_phone/user/user.proto\x12\x11string_phone.user\x1a\x1bgoogle/protobuf/empty.proto\x1a string_phone/user/rpc/user.proto2\xbb\x01\n" +
+	"\x1cstring_phone/user/user.proto\x12\x11string_phone.user\x1a\x1bgoogle/protobuf/empty.proto\x1a string_phone/user/rpc/user.proto2\x8f\x02\n" +
 	"\vUserService\x12U\n" +
 	"\x06SignUp\x12$.string_phone.user.rpc.SignUpRequest\x1a%.string_phone.user.rpc.SignUpResponse\x12U\n" +
-	"\x06SignIn\x12$.string_phone.user.rpc.SignInRequest\x1a%.string_phone.user.rpc.SignInResponseB1Z/github.com/string-phone/proto/string_phone/userb\x06proto3"
+	"\x06SignIn\x12$.string_phone.user.rpc.SignInRequest\x1a%.string_phone.user.rpc.SignInResponse\x12R\n" +
+	"\x05GetMe\x12#.string_phone.user.rpc.GetMeRequest\x1a$.string_phone.user.rpc.GetMeResponseB1Z/github.com/string-phone/proto/string_phone/userb\x06proto3"
 
 var file_string_phone_user_user_proto_goTypes = []any{
 	(*rpc.SignUpRequest)(nil),  // 0: string_phone.user.rpc.SignUpRequest
 	(*rpc.SignInRequest)(nil),  // 1: string_phone.user.rpc.SignInRequest
-	(*rpc.SignUpResponse)(nil), // 2: string_phone.user.rpc.SignUpResponse
-	(*rpc.SignInResponse)(nil), // 3: string_phone.user.rpc.SignInResponse
+	(*rpc.GetMeRequest)(nil),   // 2: string_phone.user.rpc.GetMeRequest
+	(*rpc.SignUpResponse)(nil), // 3: string_phone.user.rpc.SignUpResponse
+	(*rpc.SignInResponse)(nil), // 4: string_phone.user.rpc.SignInResponse
+	(*rpc.GetMeResponse)(nil),  // 5: string_phone.user.rpc.GetMeResponse
 }
 var file_string_phone_user_user_proto_depIdxs = []int32{
 	0, // 0: string_phone.user.UserService.SignUp:input_type -> string_phone.user.rpc.SignUpRequest
 	1, // 1: string_phone.user.UserService.SignIn:input_type -> string_phone.user.rpc.SignInRequest
-	2, // 2: string_phone.user.UserService.SignUp:output_type -> string_phone.user.rpc.SignUpResponse
-	3, // 3: string_phone.user.UserService.SignIn:output_type -> string_phone.user.rpc.SignInResponse
-	2, // [2:4] is the sub-list for method output_type
-	0, // [0:2] is the sub-list for method input_type
+	2, // 2: string_phone.user.UserService.GetMe:input_type -> string_phone.user.rpc.GetMeRequest
+	3, // 3: string_phone.user.UserService.SignUp:output_type -> string_phone.user.rpc.SignUpResponse
+	4, // 4: string_phone.user.UserService.SignIn:output_type -> string_phone.user.rpc.SignInResponse
+	5, // 5: string_phone.user.UserService.GetMe:output_type -> string_phone.user.rpc.GetMeResponse
+	3, // [3:6] is the sub-list for method output_type
+	0, // [0:3] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
 	0, // [0:0] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name
