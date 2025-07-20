@@ -7,7 +7,7 @@
 package cards
 
 import (
-	rpc "github.com/string-phone/proto/string_phone/cards/rpc"
+	rpc "github.com/K-Kizuku/ito-denwa/internal/presentation/connect/generated/string_phone/cards/rpc"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -29,7 +29,7 @@ const file_string_phone_cards_card_proto_rawDesc = "" +
 	"\vCardService\x12u\n" +
 	"\x10GetTemplateCards\x12/.string_phone.cards.rpc.GetTemplateCardsRequest\x1a0.string_phone.cards.rpc.GetTemplateCardsResponse\x12]\n" +
 	"\bGetCards\x12'.string_phone.cards.rpc.GetCardsRequest\x1a(.string_phone.cards.rpc.GetCardsResponse\x12Z\n" +
-	"\aBuyCard\x12&.string_phone.cards.rpc.BuyCardRequest\x1a'.string_phone.cards.rpc.BuyCardResponseB2Z0github.com/string-phone/proto/string_phone/cardsb\x06proto3"
+	"\aBuyCard\x12&.string_phone.cards.rpc.BuyCardRequest\x1a'.string_phone.cards.rpc.BuyCardResponseBZZXgithub.com/K-Kizuku/ito-denwa/internal/presentation/connect/generated/string_phone/cardsb\x06proto3"
 
 var file_string_phone_cards_card_proto_goTypes = []any{
 	(*rpc.GetTemplateCardsRequest)(nil),  // 0: string_phone.cards.rpc.GetTemplateCardsRequest

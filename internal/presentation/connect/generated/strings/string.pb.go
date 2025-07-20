@@ -7,7 +7,7 @@
 package strings
 
 import (
-	rpc "github.com/string-phone/proto/string_phone/strings/rpc"
+	rpc "github.com/K-Kizuku/ito-denwa/internal/presentation/connect/generated/string_phone/strings/rpc"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -30,7 +30,7 @@ const file_string_phone_strings_string_proto_rawDesc = "" +
 	"\x12GetTemplateStrings\x123.string_phone.strings.rpc.GetTemplateStringsRequest\x1a4.string_phone.strings.rpc.GetTemplateStringsResponse\x12g\n" +
 	"\n" +
 	"GetStrings\x12+.string_phone.strings.rpc.GetStringsRequest\x1a,.string_phone.strings.rpc.GetStringsResponse\x12d\n" +
-	"\tBuyString\x12*.string_phone.strings.rpc.BuyStringRequest\x1a+.string_phone.strings.rpc.BuyStringResponseB4Z2github.com/string-phone/proto/string_phone/stringsb\x06proto3"
+	"\tBuyString\x12*.string_phone.strings.rpc.BuyStringRequest\x1a+.string_phone.strings.rpc.BuyStringResponseB\\ZZgithub.com/K-Kizuku/ito-denwa/internal/presentation/connect/generated/string_phone/stringsb\x06proto3"
 
 var file_string_phone_strings_string_proto_goTypes = []any{
 	(*rpc.GetTemplateStringsRequest)(nil),  // 0: string_phone.strings.rpc.GetTemplateStringsRequest
