@@ -97,7 +97,7 @@ func (u *ItodenwaUsecase) CreateRoom(ctx context.Context, callerTel, calleeTel s
 	callerMobileConn := u.GetPool(ctx, callerTel, false)
 	u.roomRepository.AddConnection(r.ID, caller, callerMobileConn, true, false)
 	calleeMobileConn := u.GetPool(ctx, calleeTel, false)
-	u.roomRepository.AddConnection(r.ID, callee, calleeMobileConn, true, false)
+	u.roomRepository.AddConnection(r.ID, callee, calleeMobileConn, false, false)
 	return nil
 }
 
@@ -160,6 +160,7 @@ func (u *ItodenwaUsecase) GetPool(ctx context.Context, tel string, isPC bool) *s
 	}
 	return &conn.Mobile
 }
+
 func (u *ItodenwaUsecase) GetUser(ctx context.Context, tel string, isPC bool) *entity.User {
 	u.mu.RLock()
 	defer u.mu.RUnlock()
@@ -188,22 +189,29 @@ func (u *ItodenwaUsecase) Calling(ctx context.Context, user entity.User, conn se
 		slog.Error("Failed to get channels for user", "user", user.Tel, "error", err)
 		return err
 	}
+	r, err := u.roomRepository.GetRoom(roomID)
+	if err != nil {
+		return err
+	}
 
-	callerPCConn := u.GetPool(ctx, user.Tel, true)
+	callerPCConn := u.GetPool(ctx, r.Room.Caller.Tel, true)
 	if callerPCConn == nil {
 		slog.Error("PC connection not found for user", "user", user.Tel)
 		return errors.New("PC connection not found")
 	}
-	callerMobileConn := u.GetPool(ctx, user.Tel, false)
+	callerMobileConn := u.GetPool(ctx, r.Room.Caller.Tel, false)
 	if callerMobileConn == nil {
 		slog.Error("Mobile connection not found for user", "user", user.Tel)
 		return errors.New("Mobile connection not found")
 	}
-	calleeMobileConn := u.GetPool(ctx, user.Tel, false)
+	calleeMobileConn := u.GetPool(ctx, r.Room.Callee.Tel, false)
 	if calleeMobileConn == nil {
 		slog.Error("Callee mobile connection not found for user", "user", user.Tel)
 		return errors.New("Callee mobile connection not found")
 	}
+	// calleeMobileConn.Send(ctx, websocket.TextMessage, []byte("hello"))
+	// callerPCConn.Send(ctx, websocket.TextMessage, []byte("hello"))
+	// callerMobileConn.Send(ctx, websocket.TextMessage, []byte("hello"))
 	go func() {
 		for {
 			callerPCConn.Read(ctx, jsonCh, binaryCh, errCh)
@@ -220,50 +228,55 @@ func (u *ItodenwaUsecase) Calling(ctx context.Context, user entity.User, conn se
 		}
 	}()
 
-	go func() {
-		for {
-			select {
-			case msg := <-jsonCh:
-				slog.Info("Received JSON message", "message", msg)
-				if err := callerPCConn.Send(ctx, websocket.TextMessage, []byte(msg)); err != nil {
-					slog.Error("Failed to send JSON message to PC", "error", err)
+	for {
+		select {
+		case msg := <-jsonCh:
+			slog.Info("Received JSON message", "message", msg)
+			if err := callerPCConn.Send(ctx, websocket.TextMessage, []byte(msg)); err != nil {
+				slog.Error("Failed to send JSON message to PC", "error", err)
+			}
+			if err := callerMobileConn.Send(ctx, websocket.TextMessage, []byte(msg)); err != nil {
+				slog.Error("Failed to send JSON message to Mobile", "error", err)
+			}
+			if err := calleeMobileConn.Send(ctx, websocket.TextMessage, []byte(msg)); err != nil {
+				slog.Error("Failed to send JSON message to Callee Mobile", "error", err)
+			}
+		case binary := <-binaryCh:
+			slog.Info("Received binary message", "message", binary)
+			if err := callerPCConn.Send(ctx, websocket.BinaryMessage, binary); err != nil {
+				slog.Error("Failed to send binary message to PC", "error", err)
+			}
+			if err := callerMobileConn.Send(ctx, websocket.BinaryMessage, binary); err != nil {
+				slog.Error("Failed to send binary message to Mobile", "error", err)
+			}
+			if err := calleeMobileConn.Send(ctx, websocket.BinaryMessage, binary); err != nil {
+				slog.Error("Failed to send binary message to Callee Mobile", "error", err)
+			}
+		case err := <-errCh:
+			if err != nil {
+				slog.Error("Error occurred in WebSocket connection", "error", err)
+				if err := callerPCConn.Send(ctx, websocket.TextMessage, []byte("Error: "+err.Error())); err != nil {
+					slog.Error("hoge")
 				}
-				if err := callerMobileConn.Send(ctx, websocket.TextMessage, []byte(msg)); err != nil {
-					slog.Error("Failed to send JSON message to Mobile", "error", err)
+				if err := callerMobileConn.Send(ctx, websocket.TextMessage, []byte("Error: "+err.Error())); err != nil {
+					slog.Error("hoge")
 				}
-				if err := calleeMobileConn.Send(ctx, websocket.TextMessage, []byte(msg)); err != nil {
-					slog.Error("Failed to send JSON message to Callee Mobile", "error", err)
+				if err := calleeMobileConn.Send(ctx, websocket.TextMessage, []byte("Error: "+err.Error())); err != nil {
+					slog.Error("hoge")
 				}
-			case binary := <-binaryCh:
-				slog.Info("Received binary message", "message", binary)
-				if err := callerPCConn.Send(ctx, websocket.BinaryMessage, binary); err != nil {
-					slog.Error("Failed to send binary message to PC", "error", err)
-				}
-				if err := callerMobileConn.Send(ctx, websocket.BinaryMessage, binary); err != nil {
-					slog.Error("Failed to send binary message to Mobile", "error", err)
-				}
-				if err := calleeMobileConn.Send(ctx, websocket.BinaryMessage, binary); err != nil {
-					slog.Error("Failed to send binary message to Callee Mobile", "error", err)
-				}
-			case err := <-errCh:
-				if err != nil {
-					slog.Error("Error occurred in WebSocket connection", "error", err)
-					if err := callerPCConn.Close(); err != nil {
-						slog.Error("Failed to close PC connection", "error", err)
-					}
-					if err := callerMobileConn.Close(); err != nil {
-						slog.Error("Failed to close Mobile connection", "error", err)
-					}
-					if err := calleeMobileConn.Close(); err != nil {
-						slog.Error("Failed to close Callee Mobile connection", "error", err)
-					}
-					return
-				}
+				// if err := callerPCConn.Close(); err != nil {
+				// 	slog.Error("Failed to close PC connection", "error", err)
+				// }
+				// if err := callerMobileConn.Close(); err != nil {
+				// 	slog.Error("Failed to close Mobile connection", "error", err)
+				// }
+				// if err := calleeMobileConn.Close(); err != nil {
+				// 	slog.Error("Failed to close Callee Mobile connection", "error", err)
+				// }
 			}
 		}
-	}()
+	}
 
-	return nil
 }
 
 func (u *ItodenwaUsecase) Receive(ctx context.Context, conn service.Websocket) error {
