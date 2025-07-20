@@ -39,7 +39,8 @@ func (r *Router) Setup(e *gin.Engine, cfg *config.Config) *gin.Engine {
 
 		ws := api.Group("/ws")
 		{
-			ws.GET("/", r.wsh.WebSocket)
+			ws.GET("/pc", r.wsh.WebSocketPC)
+			ws.GET("/mobile", r.wsh.WebSocketMobile)
 			ws.GET("/debug", r.wsh.DebugWebSocket)
 		}
 	}

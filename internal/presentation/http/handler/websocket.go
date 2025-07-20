@@ -3,16 +3,19 @@ package handler
 import (
 	"log/slog"
 	"net/http"
+	"time"
 
 	"github.com/K-Kizuku/ito-denwa/internal/application/service"
 	"github.com/K-Kizuku/ito-denwa/internal/application/usecase"
 	"github.com/K-Kizuku/ito-denwa/internal/domain/entity"
+	"github.com/K-Kizuku/ito-denwa/pkg/uuid"
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
 )
 
 type IWebSocketHandler interface {
-	WebSocket(c *gin.Context)
+	WebSocketMobile(c *gin.Context)
+	WebSocketPC(c *gin.Context)
 	DebugWebSocket(c *gin.Context)
 }
 
@@ -26,18 +29,13 @@ func NewWebSocketHandler(ItodenwaUsecase usecase.IItodenwaUsecase) IWebSocketHan
 	}
 }
 
-func (h *WebSocketHandler) WebSocket(c *gin.Context) {
-	roomID := c.Query("room_id")
-	pc := c.Query("pc")
-	if pc == "" {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "room_id and pc are required"})
+func (h *WebSocketHandler) WebSocketMobile(c *gin.Context) {
+	tel := c.Query("tel")
+	if tel == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "tel is required"})
 		return
 	}
-	isPC := pc == "true"
-	slog.Info("WebSocket connection established", "room_id", roomID, "isPC", isPC)
-	if roomID == "" {
-		h.ItodenwaUsecase.CreateRoom(c.Request.Context())
-	}
+	slog.Info("WebSocket connection established for mobile", "tel", tel)
 	conn, err := service.Upgrade(c.Writer, c.Request)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to upgrade connection"})
@@ -45,11 +43,54 @@ func (h *WebSocketHandler) WebSocket(c *gin.Context) {
 	}
 	defer conn.Close()
 
-	err = h.ItodenwaUsecase.AddPool(c.Request.Context(), entity.User{Tel: roomID}, *conn)
+	uid := uuid.New(c.Request.Context())
+	err = h.ItodenwaUsecase.AddPool(c.Request.Context(), entity.User{ID: uid, Tel: tel}, *conn, false)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to add user to pool"})
 		return
 	}
+	time.Sleep(15 * time.Second) // Wait for the pool to be updated
+	// 共通処理へ
+	err = h.ItodenwaUsecase.Calling(c.Request.Context(), entity.User{ID: uid, Tel: tel}, *conn)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to start calling"})
+		return
+	}
+	slog.Info("WebSocket connection established for mobile", "tel", tel, "uid", uid)
+}
+
+func (h *WebSocketHandler) WebSocketPC(c *gin.Context) {
+	myTel := c.Query("my_tel")
+	targetTel := c.Query("target_tel")
+	if targetTel == "" || myTel == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "my_tel and target_tel are required"})
+		return
+	}
+	slog.Info("WebSocket connection established for PC", "my_tel", myTel, "target_tel", targetTel)
+	conn, err := service.Upgrade(c.Writer, c.Request)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to upgrade connection"})
+		return
+	}
+	defer conn.Close()
+
+	uid := uuid.New(c.Request.Context())
+	err = h.ItodenwaUsecase.AddPool(c.Request.Context(), entity.User{ID: uid, Tel: myTel}, *conn, true)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to add user to pool"})
+		return
+	}
+	err = h.ItodenwaUsecase.CreateRoom(c.Request.Context(), myTel, targetTel)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create room"})
+		return
+	}
+	err = h.ItodenwaUsecase.Calling(c.Request.Context(), entity.User{ID: uid, Tel: myTel}, *conn)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to start calling"})
+		return
+	}
+	slog.Info("WebSocket connection established for PC", "my_tel", myTel, "target_tel", targetTel, "uid", uid)
 }
 
 func (h *WebSocketHandler) DebugWebSocket(c *gin.Context) {

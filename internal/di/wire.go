@@ -16,10 +16,12 @@ import (
 func InitRouter(e *gin.Engine, cfg *config.Config) *http.Router {
 	wire.Build(
 		repository.NewHealthzRepository,
+		repository.NewRoomRepository,
 		usecase.NewHealthzUsecase,
 		http.NewRouter,
 		handler.NewHealthzHandler,
 		handler.NewWebSocketHandler,
+		usecase.NewItodenwaUsecase,
 	)
 	return &http.Router{}
 }

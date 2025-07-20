@@ -13,6 +13,9 @@ import (
 type Room struct {
 	Room        entity.Room
 	Connections Connection
+	BinaryCh    chan []byte
+	JSONCh      chan string
+	ErrCh       chan error
 }
 
 type Connection struct {
@@ -33,6 +36,7 @@ type IRoomRepository interface {
 	AddUser(roomID string, user entity.User, isCaller bool) error
 	RemoveUser(roomID string, userID string) error
 	GetRoom(roomID string) (*Room, error)
+	GetChannels(roomID string) (chan []byte, chan string, chan error, error)
 }
 
 func NewRoomRepository() IRoomRepository {
@@ -57,6 +61,9 @@ func (r *RoomRepository) Create(room entity.Room) error {
 			CalleePC:     null.New[service.Websocket](nil),
 			CalleeMobile: null.New[service.Websocket](nil),
 		},
+		BinaryCh: make(chan []byte, 100),
+		JSONCh:   make(chan string, 100),
+		ErrCh:    make(chan error, 100),
 	}
 
 	r.rooms[room.ID] = *newRoom
@@ -140,4 +147,16 @@ func (r *RoomRepository) GetRoom(roomID string) (*Room, error) {
 	}
 
 	return &room, nil
+}
+
+func (r *RoomRepository) GetChannels(roomID string) (chan []byte, chan string, chan error, error) {
+	r.mu.RLock()
+	defer r.mu.RUnlock()
+
+	room, exists := r.rooms[roomID]
+	if !exists {
+		return nil, nil, nil, errors.New("room not found")
+	}
+
+	return room.BinaryCh, room.JSONCh, room.ErrCh, nil
 }

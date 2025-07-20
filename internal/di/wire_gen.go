@@ -21,7 +21,9 @@ func InitRouter(e *gin.Engine, cfg *config.Config) *http.Router {
 	iHealthzRepository := repository.NewHealthzRepository()
 	iHealthzUsecase := usecase.NewHealthzUsecase(iHealthzRepository)
 	iHealthzHandler := handler.NewHealthzHandler(iHealthzUsecase)
-	iWebSocketHandler := handler.NewWebSocketHandler()
+	iRoomRepository := repository.NewRoomRepository()
+	iItodenwaUsecase := usecase.NewItodenwaUsecase(iRoomRepository)
+	iWebSocketHandler := handler.NewWebSocketHandler(iItodenwaUsecase)
 	router := http.NewRouter(iHealthzHandler, iWebSocketHandler)
 	return router
 }
