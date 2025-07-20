@@ -60,3 +60,9 @@ func (t *TelephoneCard) Use(amount int) {
 func (t *TelephoneCard) CanUse() bool {
 	return t.Balance > 0
 }
+
+func (t *TelephoneCard) AddHistory(amount int) {
+	if amount > 0 {
+		t.History = append(t.History, amount)
+	}
+}

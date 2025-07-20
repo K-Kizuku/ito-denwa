@@ -1,9 +1,12 @@
 package handler
 
 import (
+	"log/slog"
 	"net/http"
 
 	"github.com/K-Kizuku/ito-denwa/internal/application/service"
+	"github.com/K-Kizuku/ito-denwa/internal/application/usecase"
+	"github.com/K-Kizuku/ito-denwa/internal/domain/entity"
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
 )
@@ -14,17 +17,26 @@ type IWebSocketHandler interface {
 }
 
 type WebSocketHandler struct {
+	ItodenwaUsecase usecase.IItodenwaUsecase
 }
 
-func NewWebSocketHandler() IWebSocketHandler {
-	return &WebSocketHandler{}
+func NewWebSocketHandler(ItodenwaUsecase usecase.IItodenwaUsecase) IWebSocketHandler {
+	return &WebSocketHandler{
+		ItodenwaUsecase: ItodenwaUsecase,
+	}
 }
 
 func (h *WebSocketHandler) WebSocket(c *gin.Context) {
 	roomID := c.Query("room_id")
-	if roomID == "" {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "room_id is required"})
+	pc := c.Query("pc")
+	if pc == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "room_id and pc are required"})
 		return
+	}
+	isPC := pc == "true"
+	slog.Info("WebSocket connection established", "room_id", roomID, "isPC", isPC)
+	if roomID == "" {
+		h.ItodenwaUsecase.CreateRoom(c.Request.Context())
 	}
 	conn, err := service.Upgrade(c.Writer, c.Request)
 	if err != nil {
@@ -32,6 +44,12 @@ func (h *WebSocketHandler) WebSocket(c *gin.Context) {
 		return
 	}
 	defer conn.Close()
+
+	err = h.ItodenwaUsecase.AddPool(c.Request.Context(), entity.User{Tel: roomID}, *conn)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to add user to pool"})
+		return
+	}
 }
 
 func (h *WebSocketHandler) DebugWebSocket(c *gin.Context) {
