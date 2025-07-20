@@ -7,7 +7,7 @@
 package rpc
 
 import (
-	resources "github.com/K-Kizuku/ito-denwa/internal/presentation/connect/generated/string_phone/strings/resources"
+	resources "github.com/K-Kizuku/ito-denwa/internal/presentation/connect/generated/strings/resources"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"

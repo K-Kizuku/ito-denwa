@@ -7,7 +7,7 @@
 package user
 
 import (
-	rpc "github.com/K-Kizuku/ito-denwa/internal/presentation/connect/generated/string_phone/user/rpc"
+	rpc "github.com/K-Kizuku/ito-denwa/internal/presentation/connect/generated/user/rpc"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	_ "google.golang.org/protobuf/types/known/emptypb"

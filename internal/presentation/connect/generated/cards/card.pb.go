@@ -7,7 +7,7 @@
 package cards
 
 import (
-	rpc "github.com/K-Kizuku/ito-denwa/internal/presentation/connect/generated/string_phone/cards/rpc"
+	rpc "github.com/K-Kizuku/ito-denwa/internal/presentation/connect/generated/cards/rpc"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"

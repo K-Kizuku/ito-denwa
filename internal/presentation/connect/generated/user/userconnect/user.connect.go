@@ -8,8 +8,8 @@ import (
 	connect "connectrpc.com/connect"
 	context "context"
 	errors "errors"
-	user "github.com/K-Kizuku/ito-denwa/internal/presentation/connect/generated/string_phone/user"
-	rpc "github.com/K-Kizuku/ito-denwa/internal/presentation/connect/generated/string_phone/user/rpc"
+	user "github.com/K-Kizuku/ito-denwa/internal/presentation/connect/generated/user"
+	rpc "github.com/K-Kizuku/ito-denwa/internal/presentation/connect/generated/user/rpc"
 	http "net/http"
 	strings "strings"
 )
