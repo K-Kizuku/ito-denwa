@@ -26,7 +26,6 @@ func InitRouter(e *gin.Engine, cfg *config.Config) *http.Router {
 	iRoomRepository := repository.NewRoomRepository()
 	iItodenwaUsecase := usecase.NewItodenwaUsecase(iRoomRepository)
 	iWebSocketHandler := handler.NewWebSocketHandler(iItodenwaUsecase)
-	router := http.NewRouter(iHealthzHandler, iWebSocketHandler)
 	cardService := service.NewCardService()
 	stringItemService := service.NewStringItemService()
 	jwtJWT := jwt.NewJWT()

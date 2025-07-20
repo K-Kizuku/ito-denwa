@@ -23,7 +23,6 @@ func InitRouter(e *gin.Engine, cfg *config.Config) *http.Router {
 		usecase.NewItodenwaUsecase,
 		handler.NewHealthzHandler,
 		handler.NewWebSocketHandler,
-		usecase.NewItodenwaUsecase,
 		jwt.NewJWT,
 		service.NewCardService,
 		service.NewStringItemService,

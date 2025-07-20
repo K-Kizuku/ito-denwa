@@ -279,11 +279,6 @@ func (u *ItodenwaUsecase) Calling(ctx context.Context, user entity.User, conn se
 
 }
 
-func (u *ItodenwaUsecase) Processing() error {
-	// Implementation for processing logic
-	return nil
-}
-
 func (u *ItodenwaUsecase) Receive(ctx context.Context, conn service.Websocket) error {
 	// Implementation for receiving data from the websocket connection
 	return nil
