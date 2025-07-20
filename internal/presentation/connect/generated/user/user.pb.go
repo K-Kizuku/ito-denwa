@@ -7,7 +7,7 @@
 package user
 
 import (
-	rpc "github.com/string-phone/proto/string_phone/user/rpc"
+	rpc "github.com/K-Kizuku/ito-denwa/internal/presentation/connect/generated/string_phone/user/rpc"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	_ "google.golang.org/protobuf/types/known/emptypb"
@@ -30,7 +30,7 @@ const file_string_phone_user_user_proto_rawDesc = "" +
 	"\vUserService\x12U\n" +
 	"\x06SignUp\x12$.string_phone.user.rpc.SignUpRequest\x1a%.string_phone.user.rpc.SignUpResponse\x12U\n" +
 	"\x06SignIn\x12$.string_phone.user.rpc.SignInRequest\x1a%.string_phone.user.rpc.SignInResponse\x12R\n" +
-	"\x05GetMe\x12#.string_phone.user.rpc.GetMeRequest\x1a$.string_phone.user.rpc.GetMeResponseB1Z/github.com/string-phone/proto/string_phone/userb\x06proto3"
+	"\x05GetMe\x12#.string_phone.user.rpc.GetMeRequest\x1a$.string_phone.user.rpc.GetMeResponseBYZWgithub.com/K-Kizuku/ito-denwa/internal/presentation/connect/generated/string_phone/userb\x06proto3"
 
 var file_string_phone_user_user_proto_goTypes = []any{
 	(*rpc.SignUpRequest)(nil),  // 0: string_phone.user.rpc.SignUpRequest
