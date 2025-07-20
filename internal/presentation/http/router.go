@@ -2,6 +2,7 @@ package http
 
 import (
 	"log/slog"
+	"net/http"
 	"os"
 
 	"github.com/K-Kizuku/ito-denwa/internal/config"
@@ -43,6 +44,7 @@ func (r *Router) Setup(e *gin.Engine, cfg *config.Config) *gin.Engine {
 	slog.SetDefault(logger)
 	e.Use(gin.Logger())
 	e.Use(gin.Recovery())
+	e.Use(r.corsMiddleware(cfg))
 	api := e.Group("/api")
 	{
 		api.GET("/healthz", r.hh.Healthz)
@@ -64,4 +66,20 @@ func (r *Router) Setup(e *gin.Engine, cfg *config.Config) *gin.Engine {
 	e.Any(stringPath+"*any", gin.WrapH(stringHandler))
 	e.Any(userPath+"*any", gin.WrapH(userHandler))
 	return e
+}
+
+func (r *Router) corsMiddleware(cfg *config.Config) gin.HandlerFunc {
+	return gin.HandlerFunc(func(c *gin.Context) {
+		c.Header("Access-Control-Allow-Origin", cfg.Server.AllowOrigin)
+		c.Header("Access-Control-Allow-Credentials", "true")
+		c.Header("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With, Connect-Protocol-Version, Connect-Timeout-Ms")
+		c.Header("Access-Control-Allow-Methods", "POST, OPTIONS, GET, PUT, DELETE")
+
+		if c.Request.Method == "OPTIONS" {
+			c.AbortWithStatus(http.StatusNoContent)
+			return
+		}
+
+		c.Next()
+	})
 }
