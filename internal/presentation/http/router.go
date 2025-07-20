@@ -6,13 +6,20 @@ import (
 
 	"github.com/K-Kizuku/ito-denwa/internal/config"
 	"github.com/K-Kizuku/ito-denwa/internal/presentation/http/handler"
+	"github.com/K-Kizuku/ito-denwa/internal/presentation/connect/generated/cards/cardsconnect"
+	"github.com/K-Kizuku/ito-denwa/internal/presentation/connect/generated/strings/stringsconnect"
+	"github.com/K-Kizuku/ito-denwa/internal/presentation/connect/generated/user/userconnect"
+	"github.com/K-Kizuku/ito-denwa/internal/application/service"
 
 	"github.com/gin-gonic/gin"
 )
 
 type Router struct {
-	hh  handler.IHealthzHandler
-	wsh handler.IWebSocketHandler
+	hh          handler.IHealthzHandler
+	wsh         handler.IWebSocketHandler
+	cardService *service.CardService
+	stringService *service.StringItemService
+	userService *service.UserService
 }
 
 type IRouter interface {
@@ -21,10 +28,13 @@ type IRouter interface {
 
 var _ IRouter = (*Router)(nil)
 
-func NewRouter(hh handler.IHealthzHandler, wsh handler.IWebSocketHandler) *Router {
+func NewRouter(hh handler.IHealthzHandler, wsh handler.IWebSocketHandler, cardService *service.CardService, stringService *service.StringItemService, userService *service.UserService) *Router {
 	return &Router{
-		hh:  hh,
-		wsh: wsh,
+		hh:          hh,
+		wsh:         wsh,
+		cardService: cardService,
+		stringService: stringService,
+		userService: userService,
 	}
 }
 
@@ -44,5 +54,14 @@ func (r *Router) Setup(e *gin.Engine, cfg *config.Config) *gin.Engine {
 			ws.GET("/debug", r.wsh.DebugWebSocket)
 		}
 	}
+
+	// Connect handlers
+	cardPath, cardHandler := cardsconnect.NewCardServiceHandler(r.cardService)
+	stringPath, stringHandler := stringsconnect.NewStringItemServiceHandler(r.stringService)
+	userPath, userHandler := userconnect.NewUserServiceHandler(r.userService)
+
+	e.Any(cardPath+"*any", gin.WrapH(cardHandler))
+	e.Any(stringPath+"*any", gin.WrapH(stringHandler))
+	e.Any(userPath+"*any", gin.WrapH(userHandler))
 	return e
 }

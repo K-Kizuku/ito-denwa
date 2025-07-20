@@ -6,6 +6,27 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
+type JWT struct {
+	secret string
+}
+
+func NewJWT() *JWT {
+	return &JWT{
+		secret: "default-secret-key", // In production, this should come from config
+	}
+}
+
+func (j *JWT) Generate(userID string) (string, error) {
+	claimsMap := map[string]any{
+		"user_id": userID,
+	}
+	return GenerateToken(claimsMap, j.secret)
+}
+
+func (j *JWT) Verify(tokenString string) (map[string]any, error) {
+	return VerifyToken(tokenString, j.secret)
+}
+
 func GenerateToken(claimsMap map[string]any, secret string) (string, error) {
 	claims := jwt.MapClaims{}
 	for k, v := range claimsMap {

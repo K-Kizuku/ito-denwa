@@ -7,11 +7,13 @@
 package di
 
 import (
+	"github.com/K-Kizuku/ito-denwa/internal/application/service"
 	"github.com/K-Kizuku/ito-denwa/internal/application/usecase"
 	"github.com/K-Kizuku/ito-denwa/internal/config"
 	"github.com/K-Kizuku/ito-denwa/internal/infrastructure/repository"
 	"github.com/K-Kizuku/ito-denwa/internal/presentation/http"
 	"github.com/K-Kizuku/ito-denwa/internal/presentation/http/handler"
+	"github.com/K-Kizuku/ito-denwa/pkg/jwt"
 	"github.com/gin-gonic/gin"
 )
 
@@ -25,5 +27,10 @@ func InitRouter(e *gin.Engine, cfg *config.Config) *http.Router {
 	iItodenwaUsecase := usecase.NewItodenwaUsecase(iRoomRepository)
 	iWebSocketHandler := handler.NewWebSocketHandler(iItodenwaUsecase)
 	router := http.NewRouter(iHealthzHandler, iWebSocketHandler)
+	cardService := service.NewCardService()
+	stringItemService := service.NewStringItemService()
+	jwtJWT := jwt.NewJWT()
+	userService := service.NewUserService(jwtJWT)
+	router := http.NewRouter(iHealthzHandler, iWebSocketHandler, cardService, stringItemService, userService)
 	return router
 }
