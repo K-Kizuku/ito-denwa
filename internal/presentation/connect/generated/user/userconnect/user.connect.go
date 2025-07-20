@@ -38,12 +38,15 @@ const (
 	UserServiceSignUpProcedure = "/string_phone.user.UserService/SignUp"
 	// UserServiceSignInProcedure is the fully-qualified name of the UserService's SignIn RPC.
 	UserServiceSignInProcedure = "/string_phone.user.UserService/SignIn"
+	// UserServiceGetMeProcedure is the fully-qualified name of the UserService's GetMe RPC.
+	UserServiceGetMeProcedure = "/string_phone.user.UserService/GetMe"
 )
 
 // UserServiceClient is a client for the string_phone.user.UserService service.
 type UserServiceClient interface {
 	SignUp(context.Context, *connect.Request[rpc.SignUpRequest]) (*connect.Response[rpc.SignUpResponse], error)
 	SignIn(context.Context, *connect.Request[rpc.SignInRequest]) (*connect.Response[rpc.SignInResponse], error)
+	GetMe(context.Context, *connect.Request[rpc.GetMeRequest]) (*connect.Response[rpc.GetMeResponse], error)
 }
 
 // NewUserServiceClient constructs a client for the string_phone.user.UserService service. By
@@ -69,6 +72,12 @@ func NewUserServiceClient(httpClient connect.HTTPClient, baseURL string, opts ..
 			connect.WithSchema(userServiceMethods.ByName("SignIn")),
 			connect.WithClientOptions(opts...),
 		),
+		getMe: connect.NewClient[rpc.GetMeRequest, rpc.GetMeResponse](
+			httpClient,
+			baseURL+UserServiceGetMeProcedure,
+			connect.WithSchema(userServiceMethods.ByName("GetMe")),
+			connect.WithClientOptions(opts...),
+		),
 	}
 }
 
@@ -76,6 +85,7 @@ func NewUserServiceClient(httpClient connect.HTTPClient, baseURL string, opts ..
 type userServiceClient struct {
 	signUp *connect.Client[rpc.SignUpRequest, rpc.SignUpResponse]
 	signIn *connect.Client[rpc.SignInRequest, rpc.SignInResponse]
+	getMe  *connect.Client[rpc.GetMeRequest, rpc.GetMeResponse]
 }
 
 // SignUp calls string_phone.user.UserService.SignUp.
@@ -88,10 +98,16 @@ func (c *userServiceClient) SignIn(ctx context.Context, req *connect.Request[rpc
 	return c.signIn.CallUnary(ctx, req)
 }
 
+// GetMe calls string_phone.user.UserService.GetMe.
+func (c *userServiceClient) GetMe(ctx context.Context, req *connect.Request[rpc.GetMeRequest]) (*connect.Response[rpc.GetMeResponse], error) {
+	return c.getMe.CallUnary(ctx, req)
+}
+
 // UserServiceHandler is an implementation of the string_phone.user.UserService service.
 type UserServiceHandler interface {
 	SignUp(context.Context, *connect.Request[rpc.SignUpRequest]) (*connect.Response[rpc.SignUpResponse], error)
 	SignIn(context.Context, *connect.Request[rpc.SignInRequest]) (*connect.Response[rpc.SignInResponse], error)
+	GetMe(context.Context, *connect.Request[rpc.GetMeRequest]) (*connect.Response[rpc.GetMeResponse], error)
 }
 
 // NewUserServiceHandler builds an HTTP handler from the service implementation. It returns the path
@@ -113,12 +129,20 @@ func NewUserServiceHandler(svc UserServiceHandler, opts ...connect.HandlerOption
 		connect.WithSchema(userServiceMethods.ByName("SignIn")),
 		connect.WithHandlerOptions(opts...),
 	)
+	userServiceGetMeHandler := connect.NewUnaryHandler(
+		UserServiceGetMeProcedure,
+		svc.GetMe,
+		connect.WithSchema(userServiceMethods.ByName("GetMe")),
+		connect.WithHandlerOptions(opts...),
+	)
 	return "/string_phone.user.UserService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
 		case UserServiceSignUpProcedure:
 			userServiceSignUpHandler.ServeHTTP(w, r)
 		case UserServiceSignInProcedure:
 			userServiceSignInHandler.ServeHTTP(w, r)
+		case UserServiceGetMeProcedure:
+			userServiceGetMeHandler.ServeHTTP(w, r)
 		default:
 			http.NotFound(w, r)
 		}
@@ -134,4 +158,8 @@ func (UnimplementedUserServiceHandler) SignUp(context.Context, *connect.Request[
 
 func (UnimplementedUserServiceHandler) SignIn(context.Context, *connect.Request[rpc.SignInRequest]) (*connect.Response[rpc.SignInResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("string_phone.user.UserService.SignIn is not implemented"))
+}
+
+func (UnimplementedUserServiceHandler) GetMe(context.Context, *connect.Request[rpc.GetMeRequest]) (*connect.Response[rpc.GetMeResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("string_phone.user.UserService.GetMe is not implemented"))
 }

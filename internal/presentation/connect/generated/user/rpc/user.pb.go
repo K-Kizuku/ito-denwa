@@ -246,6 +246,86 @@ func (x *SignInResponse) GetMe() *resources.User {
 	return nil
 }
 
+type GetMeRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetMeRequest) Reset() {
+	*x = GetMeRequest{}
+	mi := &file_string_phone_user_rpc_user_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetMeRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetMeRequest) ProtoMessage() {}
+
+func (x *GetMeRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_string_phone_user_rpc_user_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetMeRequest.ProtoReflect.Descriptor instead.
+func (*GetMeRequest) Descriptor() ([]byte, []int) {
+	return file_string_phone_user_rpc_user_proto_rawDescGZIP(), []int{4}
+}
+
+type GetMeResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Me            *resources.User        `protobuf:"bytes,1,opt,name=me,proto3" json:"me,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetMeResponse) Reset() {
+	*x = GetMeResponse{}
+	mi := &file_string_phone_user_rpc_user_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetMeResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetMeResponse) ProtoMessage() {}
+
+func (x *GetMeResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_string_phone_user_rpc_user_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetMeResponse.ProtoReflect.Descriptor instead.
+func (*GetMeResponse) Descriptor() ([]byte, []int) {
+	return file_string_phone_user_rpc_user_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *GetMeResponse) GetMe() *resources.User {
+	if x != nil {
+		return x.Me
+	}
+	return nil
+}
+
 var File_string_phone_user_rpc_user_proto protoreflect.FileDescriptor
 
 const file_string_phone_user_rpc_user_proto_rawDesc = "" +
@@ -264,7 +344,10 @@ const file_string_phone_user_rpc_user_proto_rawDesc = "" +
 	"\bpassword\x18\x02 \x01(\tR\bpassword\"e\n" +
 	"\x0eSignInResponse\x12 \n" +
 	"\vaccessToken\x18\x01 \x01(\tR\vaccessToken\x121\n" +
-	"\x02me\x18\x02 \x01(\v2!.string_phone.user.resources.UserR\x02meB5Z3github.com/string-phone/proto/string_phone/user/rpcb\x06proto3"
+	"\x02me\x18\x02 \x01(\v2!.string_phone.user.resources.UserR\x02me\"\x0e\n" +
+	"\fGetMeRequest\"B\n" +
+	"\rGetMeResponse\x121\n" +
+	"\x02me\x18\x01 \x01(\v2!.string_phone.user.resources.UserR\x02meB5Z3github.com/string-phone/proto/string_phone/user/rpcb\x06proto3"
 
 var (
 	file_string_phone_user_rpc_user_proto_rawDescOnce sync.Once
@@ -278,22 +361,25 @@ func file_string_phone_user_rpc_user_proto_rawDescGZIP() []byte {
 	return file_string_phone_user_rpc_user_proto_rawDescData
 }
 
-var file_string_phone_user_rpc_user_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
+var file_string_phone_user_rpc_user_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
 var file_string_phone_user_rpc_user_proto_goTypes = []any{
 	(*SignUpRequest)(nil),  // 0: string_phone.user.rpc.SignUpRequest
 	(*SignUpResponse)(nil), // 1: string_phone.user.rpc.SignUpResponse
 	(*SignInRequest)(nil),  // 2: string_phone.user.rpc.SignInRequest
 	(*SignInResponse)(nil), // 3: string_phone.user.rpc.SignInResponse
-	(*resources.User)(nil), // 4: string_phone.user.resources.User
+	(*GetMeRequest)(nil),   // 4: string_phone.user.rpc.GetMeRequest
+	(*GetMeResponse)(nil),  // 5: string_phone.user.rpc.GetMeResponse
+	(*resources.User)(nil), // 6: string_phone.user.resources.User
 }
 var file_string_phone_user_rpc_user_proto_depIdxs = []int32{
-	4, // 0: string_phone.user.rpc.SignUpResponse.me:type_name -> string_phone.user.resources.User
-	4, // 1: string_phone.user.rpc.SignInResponse.me:type_name -> string_phone.user.resources.User
-	2, // [2:2] is the sub-list for method output_type
-	2, // [2:2] is the sub-list for method input_type
-	2, // [2:2] is the sub-list for extension type_name
-	2, // [2:2] is the sub-list for extension extendee
-	0, // [0:2] is the sub-list for field type_name
+	6, // 0: string_phone.user.rpc.SignUpResponse.me:type_name -> string_phone.user.resources.User
+	6, // 1: string_phone.user.rpc.SignInResponse.me:type_name -> string_phone.user.resources.User
+	6, // 2: string_phone.user.rpc.GetMeResponse.me:type_name -> string_phone.user.resources.User
+	3, // [3:3] is the sub-list for method output_type
+	3, // [3:3] is the sub-list for method input_type
+	3, // [3:3] is the sub-list for extension type_name
+	3, // [3:3] is the sub-list for extension extendee
+	0, // [0:3] is the sub-list for field type_name
 }
 
 func init() { file_string_phone_user_rpc_user_proto_init() }
@@ -307,7 +393,7 @@ func file_string_phone_user_rpc_user_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_string_phone_user_rpc_user_proto_rawDesc), len(file_string_phone_user_rpc_user_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   4,
+			NumMessages:   6,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
