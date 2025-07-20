@@ -119,7 +119,7 @@ const file_string_phone_user_resources_user_proto_rawDesc = "" +
 	"\n" +
 	"created_at\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x129\n" +
 	"\n" +
-	"updated_at\x18\x06 \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAtB;Z9github.com/string-phone/proto/string_phone/user/resourcesb\x06proto3"
+	"updated_at\x18\x06 \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAtBcZagithub.com/K-Kizuku/ito-denwa/internal/presentation/connect/generated/string_phone/user/resourcesb\x06proto3"
 
 var (
 	file_string_phone_user_resources_user_proto_rawDescOnce sync.Once

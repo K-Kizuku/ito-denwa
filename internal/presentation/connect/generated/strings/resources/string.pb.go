@@ -273,7 +273,7 @@ const file_string_phone_strings_resources_string_proto_rawDesc = "" +
 	"\rSTRING_TYPE_C\x10\x03\x12\x11\n" +
 	"\rSTRING_TYPE_D\x10\x04\x12\x11\n" +
 	"\rSTRING_TYPE_E\x10\x05\x12\x11\n" +
-	"\rSTRING_TYPE_F\x10\x06B>Z<github.com/string-phone/proto/string_phone/strings/resourcesb\x06proto3"
+	"\rSTRING_TYPE_F\x10\x06BfZdgithub.com/K-Kizuku/ito-denwa/internal/presentation/connect/generated/string_phone/strings/resourcesb\x06proto3"
 
 var (
 	file_string_phone_strings_resources_string_proto_rawDescOnce sync.Once

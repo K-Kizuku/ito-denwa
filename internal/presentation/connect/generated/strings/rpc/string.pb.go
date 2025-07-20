@@ -7,7 +7,7 @@
 package rpc
 
 import (
-	resources "github.com/string-phone/proto/string_phone/strings/resources"
+	resources "github.com/K-Kizuku/ito-denwa/internal/presentation/connect/generated/string_phone/strings/resources"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -311,7 +311,7 @@ const file_string_phone_strings_rpc_string_proto_rawDesc = "" +
 	"\x11BuyStringResponse\x12\x18\n" +
 	"\asuccess\x18\x01 \x01(\bR\asuccess\x12\x18\n" +
 	"\amessage\x18\x02 \x01(\tR\amessage\x12>\n" +
-	"\x06string\x18\x03 \x01(\v2&.string_phone.strings.resources.StringR\x06stringB8Z6github.com/string-phone/proto/string_phone/strings/rpcb\x06proto3"
+	"\x06string\x18\x03 \x01(\v2&.string_phone.strings.resources.StringR\x06stringB`Z^github.com/K-Kizuku/ito-denwa/internal/presentation/connect/generated/string_phone/strings/rpcb\x06proto3"
 
 var (
 	file_string_phone_strings_rpc_string_proto_rawDescOnce sync.Once

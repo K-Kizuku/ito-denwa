@@ -261,7 +261,7 @@ const file_string_phone_cards_resources_card_proto_rawDesc = "" +
 	"\vCARD_TYPE_C\x10\x03\x12\x0f\n" +
 	"\vCARD_TYPE_D\x10\x04\x12\x0f\n" +
 	"\vCARD_TYPE_E\x10\x05\x12\x0f\n" +
-	"\vCARD_TYPE_F\x10\x06B<Z:github.com/string-phone/proto/string_phone/cards/resourcesb\x06proto3"
+	"\vCARD_TYPE_F\x10\x06BdZbgithub.com/K-Kizuku/ito-denwa/internal/presentation/connect/generated/string_phone/cards/resourcesb\x06proto3"
 
 var (
 	file_string_phone_cards_resources_card_proto_rawDescOnce sync.Once

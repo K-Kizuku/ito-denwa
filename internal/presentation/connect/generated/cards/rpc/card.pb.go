@@ -7,7 +7,7 @@
 package rpc
 
 import (
-	resources "github.com/string-phone/proto/string_phone/cards/resources"
+	resources "github.com/K-Kizuku/ito-denwa/internal/presentation/connect/generated/string_phone/cards/resources"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -302,7 +302,7 @@ const file_string_phone_cards_rpc_card_proto_rawDesc = "" +
 	"\x06credit\x18\x02 \x01(\x05R\x06credit\"E\n" +
 	"\x0fBuyCardResponse\x12\x18\n" +
 	"\asuccess\x18\x01 \x01(\bR\asuccess\x12\x18\n" +
-	"\amessage\x18\x02 \x01(\tR\amessageB6Z4github.com/string-phone/proto/string_phone/cards/rpcb\x06proto3"
+	"\amessage\x18\x02 \x01(\tR\amessageB^Z\\github.com/K-Kizuku/ito-denwa/internal/presentation/connect/generated/string_phone/cards/rpcb\x06proto3"
 
 var (
 	file_string_phone_cards_rpc_card_proto_rawDescOnce sync.Once
